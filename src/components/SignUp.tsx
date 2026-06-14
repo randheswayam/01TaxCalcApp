@@ -47,7 +47,7 @@ export const SignUp: React.FC = () => {
       // Simulate API call and state storage
       setTimeout(() => {
         signUp(name, email);
-        setCurrentStep(1); // Proceed straight to the first step of tax check
+        setCurrentStep(-30); // Route to payment lock screen
       }, 1500);
     }
   };

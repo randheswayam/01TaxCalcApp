@@ -40,7 +40,7 @@ export interface TaxState {
 
 export interface TaxContextType {
   state: TaxState;
-  currentStep: number; // -20: SignUp, -10: Sandbox, 0: Landing, 1-8: Wizard, 9: Result
+  currentStep: number; // -30: PaymentGate, -20: SignUp, -10: Sandbox, 0: Landing, 1-8: Wizard, 9: Result
   updateState: (updates: Partial<TaxState>) => void;
   setCurrentStep: (step: number) => void;
   resetState: () => void;
@@ -52,6 +52,9 @@ export interface TaxContextType {
   user: { name: string; email: string } | null;
   signUp: (name: string, email: string) => void;
   signOut: () => void;
+  hasPaid: boolean;
+  paymentReference: string | null;
+  unlockCalculator: (reference: string) => void;
 }
 
 const initialTaxState: TaxState = {
@@ -93,6 +96,12 @@ export const TaxProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const saved = localStorage.getItem('taxcalc_user');
     return saved ? JSON.parse(saved) : null;
   });
+  const [hasPaid, setHasPaid] = useState<boolean>(() => {
+    return localStorage.getItem('taxcalc_paid') === 'true';
+  });
+  const [paymentReference, setPaymentReference] = useState<string | null>(() => {
+    return localStorage.getItem('taxcalc_pay_ref');
+  });
 
   const updateState = (updates: Partial<TaxState>) => {
     setState((prev) => ({ ...prev, ...updates }));
@@ -111,7 +120,18 @@ export const TaxProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const signOut = () => {
     localStorage.removeItem('taxcalc_user');
+    localStorage.removeItem('taxcalc_paid');
+    localStorage.removeItem('taxcalc_pay_ref');
     setUser(null);
+    setHasPaid(false);
+    setPaymentReference(null);
+  };
+
+  const unlockCalculator = (reference: string) => {
+    localStorage.setItem('taxcalc_paid', 'true');
+    localStorage.setItem('taxcalc_pay_ref', reference);
+    setHasPaid(true);
+    setPaymentReference(reference);
   };
 
   // Derive tax calculations
@@ -159,6 +179,9 @@ export const TaxProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         user,
         signUp,
         signOut,
+        hasPaid,
+        paymentReference,
+        unlockCalculator,
       }}
     >
       {children}

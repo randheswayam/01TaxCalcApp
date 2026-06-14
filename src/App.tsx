@@ -4,13 +4,16 @@ import { Layout } from './components/Layout';
 import { LandingPage } from './components/LandingPage';
 import { Sandbox } from './components/Sandbox';
 import { SignUp } from './components/SignUp';
+import { PaymentGate } from './components/PaymentGate';
 
 const AppContent: React.FC = () => {
   const { currentStep, setCurrentStep } = useTax();
 
   return (
     <Layout>
-      {currentStep === -20 ? (
+      {currentStep === -30 ? (
+        <PaymentGate />
+      ) : currentStep === -20 ? (
         <SignUp />
       ) : currentStep === -10 ? (
         <Sandbox />
