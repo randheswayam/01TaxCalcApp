@@ -274,10 +274,10 @@ const testCases: TestCase[] = [
 export const Sandbox: React.FC = () => {
   const { state, updateState, resetState } = useTax();
 
-  const handleInputChange = (field: keyof typeof state, value: any) => {
+  const handleInputChange = (field: keyof typeof state, value: string | number | boolean) => {
     // Parse numeric fields to avoid string calculations
     if (typeof state[field] === 'number') {
-      const parsed = parseFloat(value);
+      const parsed = parseFloat(String(value));
       updateState({ [field]: isNaN(parsed) ? 0 : parsed });
     } else {
       updateState({ [field]: value });

@@ -1,19 +1,25 @@
 import React, { type ReactNode } from 'react';
-import { ShieldAlert, Info } from 'lucide-react';
+import { ShieldAlert, Info, LogOut } from 'lucide-react';
+import { useTax } from '../context/TaxContext';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { user, signOut, currentStep, setCurrentStep } = useTax();
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col antialiased">
       {/* Header */}
       <header className="sticky top-0 z-50 glass-panel bg-white/85 border-b border-slate-200/80 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div 
+            onClick={() => setCurrentStep(0)}
+            className="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity select-none"
+          >
             {/* Elegant logo mark */}
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 font-outfit text-xl">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-blue-50 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 font-outfit text-xl">
               ₹
             </div>
             <div className="flex flex-col">
@@ -34,6 +40,36 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               <ShieldAlert className="w-3.5 h-3.5 text-emerald-600 mr-1" />
               <span>100% Client-Side Only</span>
             </div>
+
+            {/* Authentication Navigation */}
+            {user ? (
+              <div className="flex items-center gap-3 border-l border-slate-200 pl-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-bold text-[10px] font-outfit uppercase">
+                    {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                  </div>
+                  <span className="hidden sm:inline text-xs font-extrabold text-slate-700 font-outfit">
+                    {user.name}
+                  </span>
+                </div>
+                <button
+                  onClick={signOut}
+                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              currentStep !== -20 && (
+                <button
+                  onClick={() => setCurrentStep(-20)}
+                  className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-xs font-bold font-outfit px-4 py-2 rounded-xl text-white transition-all cursor-pointer shadow-sm shadow-blue-500/10"
+                >
+                  Sign Up
+                </button>
+              )
+            )}
           </div>
         </div>
       </header>

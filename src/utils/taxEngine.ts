@@ -88,6 +88,7 @@ export function get80TTALimit(ageCategory: AgeCategory): number {
  * Calculates the New Regime tax for FY 2025-26
  */
 export function calculateNewRegimeTax(grossIncome: number, _ageCategory: AgeCategory): TaxResult {
+  void _ageCategory;
   // Step 1: Standard Deduction (fixed ₹75,000 for salaried)
   const standardDeduction = 75000;
   const taxableIncome = Math.max(0, grossIncome - standardDeduction);
@@ -182,14 +183,9 @@ export function calculateOldRegimeTax(
 
   // 80TTA/80TTB (Limit applied to actual savings interest, or fd+savings for seniors)
   const limit80TTA = get80TTALimit(ageCategory);
-  let interestDeduction = 0;
-  if (ageCategory === 'below60') {
-    // 80TTA: Savings interest only
-    interestDeduction = Math.min(deductions.savingsInterest, limit80TTA);
-  } else {
-    // 80TTB: All interest (savings + FD)
-    interestDeduction = Math.min(deductions.savingsInterest + deductions.fdInterest, limit80TTA);
-  }
+  const interestDeduction = ageCategory === 'below60'
+    ? Math.min(deductions.savingsInterest, limit80TTA)
+    : Math.min(deductions.savingsInterest + deductions.fdInterest, limit80TTA);
 
   // NPS Additional (80CCD(1B))
   const npsDeduction = Math.min(deductions.npsAmount, 50000);

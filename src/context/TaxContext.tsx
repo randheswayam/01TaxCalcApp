@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
 import {
   type AgeCategory,
@@ -39,7 +40,7 @@ export interface TaxState {
 
 export interface TaxContextType {
   state: TaxState;
-  currentStep: number; // -10: Sandbox, 0: Landing, 1-8: Wizard, 9: Result
+  currentStep: number; // -20: SignUp, -10: Sandbox, 0: Landing, 1-8: Wizard, 9: Result
   updateState: (updates: Partial<TaxState>) => void;
   setCurrentStep: (step: number) => void;
   resetState: () => void;
@@ -48,6 +49,9 @@ export interface TaxContextType {
   oldRegimeTax: TaxResult;
   savings: number;
   recommendedRegime: 'old' | 'new';
+  user: { name: string; email: string } | null;
+  signUp: (name: string, email: string) => void;
+  signOut: () => void;
 }
 
 const initialTaxState: TaxState = {
@@ -85,6 +89,10 @@ const TaxContext = createContext<TaxContextType | undefined>(undefined);
 export const TaxProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<TaxState>(initialTaxState);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(() => {
+    const saved = localStorage.getItem('taxcalc_user');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   const updateState = (updates: Partial<TaxState>) => {
     setState((prev) => ({ ...prev, ...updates }));
@@ -93,6 +101,17 @@ export const TaxProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const resetState = () => {
     setState(initialTaxState);
     setCurrentStep(0);
+  };
+
+  const signUp = (name: string, email: string) => {
+    const newUser = { name, email };
+    localStorage.setItem('taxcalc_user', JSON.stringify(newUser));
+    setUser(newUser);
+  };
+
+  const signOut = () => {
+    localStorage.removeItem('taxcalc_user');
+    setUser(null);
   };
 
   // Derive tax calculations
@@ -137,6 +156,9 @@ export const TaxProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         oldRegimeTax,
         savings,
         recommendedRegime,
+        user,
+        signUp,
+        signOut,
       }}
     >
       {children}
