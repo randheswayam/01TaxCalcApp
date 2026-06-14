@@ -5,6 +5,7 @@ import { LandingPage } from './components/LandingPage';
 import { Sandbox } from './components/Sandbox';
 import { SignUp } from './components/SignUp';
 import { PaymentGate } from './components/PaymentGate';
+import { Wizard } from './components/Wizard';
 
 const AppContent: React.FC = () => {
   const { currentStep, setCurrentStep } = useTax();
@@ -19,23 +20,25 @@ const AppContent: React.FC = () => {
         <Sandbox />
       ) : currentStep === 0 ? (
         <LandingPage />
+      ) : currentStep >= 1 && currentStep <= 8 ? (
+        <Wizard />
       ) : (
         <div className="flex-grow flex items-center justify-center py-20 px-4">
           <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 shadow-premium text-center space-y-6">
             <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto border border-blue-100">
-              <span className="font-bold text-2xl font-outfit">?</span>
+              <span className="font-bold text-2xl font-outfit">✓</span>
             </div>
             <h2 className="text-2xl font-outfit font-bold text-slate-800">
-              Wizard Step {currentStep} Placeholder
+              Wizard Completed!
             </h2>
             <p className="text-sm text-slate-500 leading-relaxed">
-              You've started the tax check! In Phase 3, this area will display the interactive 8-step wizard questions.
+              You've successfully completed the onboarding questions! In Phase 6, this page will present the final side-by-side comparative reports, recommendations, and slabs breakdown.
             </p>
             <button
               onClick={() => setCurrentStep(0)}
               className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all-custom font-outfit"
             >
-              ← Back to Landing Page
+              ← Start Over (Back to Landing Page)
             </button>
           </div>
         </div>
