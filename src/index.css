@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1e40af;
+  --color-primary-light: #3b82f6;
+  --color-secondary: #059669;
+  --color-secondary-light: #10b981;
+  --color-brand-bg: #f8fafc;
+  --color-card: #ffffff;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-border-custom: #e2e8f0;
+  --color-error-custom: #dc2626;
+  --color-warning-custom: #f59e0b;
+  --color-success-custom: #10b981;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-outfit: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+  }
+}
+
+/* Custom CSS micro-animations & layout tweaks */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.transition-all-custom {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shadow-premium {
+  box-shadow: 0 4px 20px -2px rgba(30, 64, 175, 0.05), 0 2px 8px -1px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-premium-hover {
+  box-shadow: 0 12px 30px -4px rgba(30, 64, 175, 0.1), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
